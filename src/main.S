@@ -68,7 +68,7 @@ get_digit_from_flash:
 
 	cbi PORTA, 7 ; CE active
 
-	ldi r24, 0x03
+	ldi r24, 0x03		; Send `read` command to flash: 0x03 + 3 address bytes
 	rcall SPITransfer
 	mov r24, r25
 	rcall SPITransfer
@@ -77,21 +77,14 @@ get_digit_from_flash:
 	mov r24, r22
 	rcall SPITransfer
 
-	rcall SPITransfer
+	rcall SPITransfer	; Read back byte from flash
 
 	sbi PORTA, 7 ; CE inactive
 
 	pop r22
 	sbrc r22, 0
-	rjmp 1f ; high nibble
-	; low nibble
+	swap r24
 	andi r24, 0xF
-	ret
-1:
-	lsr r24
-	lsr r24
-	lsr r24
-	lsr r24
 	ret
 
 tick:
@@ -133,8 +126,8 @@ setup_tick:
 	ldi r16, 0b00001011 ; divide clock by 64 (run at 15 KHz)
 	out TCCR1B, r16 ; enable clock
 
-	ldi r17, hi8(1000000/64*2)
-	ldi r16, lo8(1000000/64*2)
+	ldi r17, hi8(1000000/64)
+	ldi r16, lo8(1000000/64)
 	out OCR1AH, r17
 	out OCR1AL, r16
 

@@ -33,10 +33,7 @@ render_digit:
 
 	mov r17, r0
 	andi r17, 0b01110000
-	lsr r17
-	lsr r17
-	lsr r17
-	lsr r17
+	swap r17
 
 	or r16, r17
 
