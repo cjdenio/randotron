@@ -32,9 +32,11 @@ dummy_isr: reti
 start:
 	clr r1 ; r1 should always be 0
 
-	sts current_digit, r1	; initialize to 0
-	sts current_digit+1, r1
-	sts current_digit+2, r1
+	ldi r30, lo8(current_digit)
+	ldi r31, hi8(current_digit)
+	st  Z,   r1
+	std Z+1, r1
+	std Z+2, r1
 
 	; set up pin directions
 	ldi r16, 0b10111111
@@ -42,7 +44,7 @@ start:
 	ldi r16, 0b00000111
 	out DDRB, r16
 
-	sbi PORTA, 7 ; CS high for flash
+	sbi PORTA, 7 ; CE high for flash
 
 	rcall show_next_digit ; show the first digit
 
@@ -93,9 +95,12 @@ tick:
 	reti
 
 show_next_digit:
-	lds r22, current_digit
-	lds r23, current_digit+1
-	lds r24, current_digit+2
+	ldi r30, lo8(current_digit)
+	ldi r31, hi8(current_digit)
+
+	ld  r22, Z
+	ldd r23, Z+1
+	ldd r24, Z+2
 
 	push r22
 	push r23
@@ -114,9 +119,12 @@ show_next_digit:
 	adc r23, r1
 	adc r24, r1
 
-	sts current_digit, r22
-	sts current_digit+1, r23
-	sts current_digit+2, r24
+	ldi r30, lo8(current_digit)
+	ldi r31, hi8(current_digit)
+
+	st  Z,   r22
+	std Z+1, r23
+	std Z+2, r24
 
 	ret
 
