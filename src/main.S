@@ -32,19 +32,23 @@ dummy_isr: reti
 start:
 	clr r1 ; r1 should always be 0
 
-	ldi r30, lo8(current_digit)
-	ldi r31, hi8(current_digit)
-	st  Z,   r1
-	std Z+1, r1
-	std Z+2, r1
-
 	; set up pin directions
 	ldi r16, 0b10111111
 	out DDRA, r16
 	ldi r16, 0b00000111
 	out DDRB, r16
 
-	sbi PORTA, 7 ; CE high for flash
+	; turn display off
+	ldi r16, 0b10001111
+	out PORTA, r16
+	ldi r16, 0b00000111
+	out PORTB, r16
+
+	ldi r30, lo8(current_digit)
+	ldi r31, hi8(current_digit)
+	st  Z,   r1
+	std Z+1, r1
+	std Z+2, r1
 
 	rcall show_next_digit ; show the first digit
 

@@ -5,6 +5,9 @@
 .global render_digit
 
 render_digit:
+	cpi r24, 10 ; ensure that r24 is <10
+	brsh 1f
+
 	; load digit
 	ldi r30, lo8(digits)
 	ldi r31, hi8(digits)
@@ -39,7 +42,7 @@ render_digit:
 
 	out PORTB, r16
 
-
+1:
 	ret
 
 
