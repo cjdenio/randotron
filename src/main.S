@@ -30,6 +30,9 @@ _vectors:
 dummy_isr: reti
 
 start:
+	ldi r16, 0x85 ; calibrate internal clock- my particular ATtiny runs a little fast
+	out OSCCAL, r16
+
 	clr r1 ; r1 should always be 0
 
 	; set up pin directions
