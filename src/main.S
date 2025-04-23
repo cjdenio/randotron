@@ -8,7 +8,7 @@ current_digit: .zero 3
 _vectors:
 	rjmp start		; RESET
 	rjmp dummy_isr	; EXT_INT0
-	rjmp dummy_isr  ; PCINT0
+	rjmp dummy_isr	; PCINT0
 	rjmp dummy_isr	; PCINT1
 	rjmp dummy_isr	; WDT
 	rjmp dummy_isr	; TIM1_CAPT
