@@ -19,32 +19,34 @@ SPITransfer_loop:
 	in r24,USIDR
 	ret
 
-; bit-banged SPI, DOESN'T WORK, find out why!
-; spi_transfer:
+; bit-banged SPI, technically works but not ideal
+; SPITransfer:
 ; 	; transfer 8 bits
 ; 	ldi r17, 8
 ; 1:
 ; 	; put MSB on DO
 ; 	sbrc r24, 7  ; test bit
-; 	sbi PORTA, 5 ; bit set
+; 	rjmp 2f
 ; 	cbi PORTA, 5 ; bit clear
-;
-; 	; pulse clock
-; 	sbi PORTA, 4
-; 	nop
-; 	nop
-; 	nop ; feels right
-; 	cbi PORTA, 4
-; 	nop
-; 	nop
-; 	nop
+; 	rjmp 3f
+; 2:
+; 	sbi PORTA, 5 ; bit set
+; 3:
 ;
 ; 	lsl r24
 ;
 ; 	; grab bit from DI
 ; 	sbic PINA, 6
-; 	sbr r24, 0b00000001 ; bit set
+; 	rjmp 2f
 ; 	cbr r24, 0b00000001 ; bit clear
+; 	rjmp 3f
+; 2:
+; 	sbr r24, 0b00000001 ; bit set
+; 3:
+;
+; 	; pulse clock
+; 	sbi PORTA, 4
+; 	cbi PORTA, 4
 ;
 ;
 ; 	dec r17
